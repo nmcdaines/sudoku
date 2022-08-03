@@ -20,7 +20,7 @@ export function Grid({ cellCount = 81, size = 360 }) {
         return (
           <Group 
             size={size/3}
-            groupNumber={index}
+            groupIndex={index}
           />
         );
       })}
@@ -29,7 +29,7 @@ export function Grid({ cellCount = 81, size = 360 }) {
   );
 }
 
-export function Group({ children, size = 144, groupNumber }) {
+export function Group({ children, size = 144, groupIndex }) {
   const cellSize = (size - 8) / 3;
 
   return (
@@ -40,28 +40,19 @@ export function Group({ children, size = 144, groupNumber }) {
         height: size - 4,
       }}
     >
-      {Array(9).fill(0).map((_, index) => {
-        const groupRow = Math.floor(index / 3);
-        const groupStart = (Math.floor(groupNumber / 3) * 9 * 3)
-        const groupRowStart = ((groupRow % 3) * 3 * 3);
-        const cellNumber = groupStart + groupRowStart + (groupNumber % 3)
-  
-        // <Cell value={elements[(groupNumber * 3) + index]} size={cellSize} />
+      {Array(9).fill(0).map((_, cellIndex) => {
+        const groupRow = Math.floor(groupIndex / 3); 
+        const groupColumn = groupIndex % 3; 
+        const cellRow = Math.floor(cellIndex / 3);
+        const cellColumn = cellIndex % 3;
+        const boardRow = 3 * groupRow + cellRow;
+        const boardRowStartIndex = boardRow * 9;
+        const boardCellIndex = boardRowStartIndex + (3 * groupColumn) + cellColumn;
 
         return (
-          <Cell value={`${cellNumber},${groupRow}`} size={cellSize} />
+          <Cell value={`${elements[boardCellIndex]}`} size={cellSize} />
         );
       })}
-
-    {/*<Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />
-      <Cell value={groupNumber} size={cellSize} />*/}
     </View>
   );
 }
